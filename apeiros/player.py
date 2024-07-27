@@ -1,7 +1,7 @@
 from .game import db
 from .models import Player
 from .models.enums import Direction
-from .exceptions import PlayerNotFound, BadMovementDirection, BadMovementDistance
+from .exceptions import PlayerNotFound, PlayerNicknameTaken, BadMovementDirection, BadMovementDistance
 from .utilities import image
 
 
@@ -139,6 +139,21 @@ def move_player(player: Player, direction: Direction | str | int, distance: int 
     player.y = dest_y
 
     return True
+
+
+def update_name(player: Player, nickname: str) -> str:
+    # check if any players already have that nickname
+
+    existing = db().get_player_list()
+    existing_nicknames = [p.nickname.lower() for p in existing]
+
+    if nickname.lower() in existing_nicknames:
+        raise PlayerNicknameTaken
+
+    player.nickname = nickname
+
+    db().update_player(player)
+
 
 
 #####################

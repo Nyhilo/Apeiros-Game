@@ -13,6 +13,10 @@ class BadMovementDistance(Exception):
     pass
 
 
+class PlayerNicknameTaken(Exception):
+    pass
+
+
 # Location Exceptions #
 
 class LocationOverlapError(Exception):

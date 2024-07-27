@@ -31,6 +31,9 @@ class Database():
         elif type(unique_ids) is list:
             return self.session.scalars(select(Player).where(Player.unique_id.in_(unique_ids))).all()
 
+    def update_player(self, player: Player) -> None:
+        self.session.merge(player)
+
     # Medals #
     def upsert_medal(self, medal: Medal) -> None:
         self.session.merge(medal)
