@@ -42,6 +42,9 @@ def create_player(
             A nickname. Takes precedence over username for identifying the user.
         player_token (bytes):
             A square png. Maximum size of 200kb.
+        autocrop (bool):
+            Indicates whether the player token should be automatically cropped
+            to a square aspect ratio.
 
     '''
     # Sanitize identifiers
@@ -89,22 +92,19 @@ def get_player(unique_id: str) -> str:
     return player
 
 
-def move_player(player: Player, direction: Direction | str | int, distance: int = 1) -> int:
+def move_player(player: Player, direction: Direction | str | int, distance: int = 1) -> None:
     '''
     Tries to move the player a certain number of squares in a gven direction.
     Accepts the following directions:
     North, East, South, West from apeiros.Direction.
     The strings "North", "East", "South", or "West".
-    The strings "N", "E", "S", or "W"..
+    The strings "N", "E", "S", or "W".
     The strings "Up", "Right", "Down", or "Left".
     The integers 1, 2, 3, or 4, corresponding to the directions N, E, S, and W.
     All strings are non-case-sensitive.
 
     Args:
         direction (Direction | str | int): The direction to move.
-
-    Returns:
-        bool: The distance moved. Will be 0 if the move failed.
     '''
     # Validate the direction is a correct form
     if type(direction) is str:
@@ -138,12 +138,19 @@ def move_player(player: Player, direction: Direction | str | int, distance: int 
     player.x = dest_x
     player.y = dest_y
 
-    return True
 
+def update_name(player: Player, nickname: str) -> None:
+    '''
+    Sets the nickname of the given player. Two players cannot share the same
+    nickname, insensitive to case.
 
-def update_name(player: Player, nickname: str) -> str:
-    # check if any players already have that nickname
+    Args:
+        player (Player): The Player object to update.
+        nickname (str): The new player nickname.
 
+    Raises:
+        PlayerNicknameTaken: Player nickname already taken by another player.
+    '''
     existing = db().get_player_list()
     existing_nicknames = [p.nickname.lower() for p in existing]
 
@@ -154,6 +161,21 @@ def update_name(player: Player, nickname: str) -> str:
 
     db().update_player(player)
 
+
+def update_token(player: Player, image: bytes, autocrop: bool = False) -> None:
+    '''
+    Updates the token for the given player. The given image should be square.
+
+    Args:
+        player (Player): The Player object to update.
+        image (bytes): The image to set as the player token.
+        autocrop (bool, optional): If true, the image will be cropped square. Defaults to False.
+    '''
+    player_token = _handle_player_token(image, autocrop)
+
+    player.player_token = player_token
+
+    db().update_player(player)
 
 
 #####################
