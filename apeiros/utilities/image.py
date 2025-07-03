@@ -2,6 +2,7 @@
 
 from io import BytesIO
 from math import floor, ceil
+from typing import Tuple
 
 from PIL import Image
 
@@ -9,7 +10,7 @@ from PIL import Image
 IMAGE_FORMAT = 'PNG'
 
 
-def check_square(image: bytes) -> (int, int, int, int):
+def check_square(image: bytes) -> Tuple[int, int, int, int]:
     '''
     Checks how square the image is. Returns a tuple indicating how many pixels
      the image is off from being square, the percentage of the difference from

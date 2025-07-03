@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from .game import db
 from .models import Player
 from .models.enums import Direction
@@ -183,7 +185,7 @@ def update_token(player: Player, image: bytes, autocrop: bool = False) -> None:
 #####################
 
 # Written with Lily's help :)
-def _handle_user_identifiers(unique_id: str, username: str, nickname: str) -> (str, str, str):
+def _handle_user_identifiers(unique_id: str, username: str, nickname: str) -> Tuple[str, str, str]:
     has_unique_id = unique_id is not None
     has_username = username is not None
     has_nickname = nickname is not None
@@ -217,7 +219,7 @@ def _handle_player_token(token: bytes, autocrop: bool = False) -> bytes:
     return token
 
 
-def _normalize_direction(direction: Direction | str | int, distance: int) -> (int, int):
+def _normalize_direction(direction: Direction | str | int, distance: int) -> Tuple[int, int]:
     '''
     Converts a direction and a distance to a movement vector (x, y).
     For example, a direction of "west" and a distance of 3 would result in the
