@@ -1,0 +1,29 @@
+[project]
+name = "apieros-game"
+version = "0.1.7"
+authors = [
+  { name="Nyhilo", email="jacclowa@gmail.com" },
+]
+description = "A framework for the game Apeiros, an infinite nomic discord game"
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+]
+license = "MIT"
+license-files = ["LICENSE"]
+
+[project.urls]
+Homepage = "https://github.com/Nyhilo/Apeiros-Game"
+Issues = "https://github.com/Nyhilo/Apeiros-Game/issues"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+pythonpath = "src"
+addopts = [
+    "--import-mode=importlib",
+]
