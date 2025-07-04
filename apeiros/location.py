@@ -81,4 +81,7 @@ def create_location(
         tile_submitter=proposed_location.submitter,
         submission_fulfiller=proposal_fulfiller
     )
+
     db().add_location(location)
+
+    return db().get_location(x, y)

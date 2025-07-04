@@ -68,7 +68,7 @@ def create_player(
     )
     db().add_player(player)
 
-    return player
+    return db().get_player(player.unique_id)
 
 
 def get_player(unique_id: str) -> str:
