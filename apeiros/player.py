@@ -1,9 +1,10 @@
 from typing import Tuple
 
 from .game import db
-from .models import Player
+from .models import Player, Medal, Item
 from .models.enums import Direction
-from .exceptions import PlayerNotFound, PlayerNicknameTaken, BadMovementDirection, BadMovementDistance
+from .exceptions import PlayerNotFound, PlayerNicknameTaken, BadMovementDirection, BadMovementDistance, \
+                        PlayerAlreadyHasMedal, PlayerDoesntHaveMedal
 from .utilities import image
 
 
@@ -178,6 +179,78 @@ def update_token(player: Player, image: bytes, autocrop: bool = False) -> None:
     player.player_token = player_token
 
     db().update_player(player)
+
+
+def add_medal(player: Player, medal: Medal) -> None:
+    '''
+    Give a medal to the specified player.
+
+    Args:
+        player (Player): The Player object to update.
+        medal (Medal): The Medal object to associate with the player.
+
+    Raises:
+        PlayerAlreadyHasMedal: Player already has the given medal.
+    '''
+    if medal.medal_id in [m.medal_id for m in player.medals]:
+        raise PlayerAlreadyHasMedal
+
+    player.medals.add(medal)
+
+    db().update_player(player)
+
+
+def remove_medal(player: Player, medal: Medal) -> None:
+    '''
+    Removes a medal from the specified player.
+
+    Args:
+        player (Player): The Player object to update.
+        medal (Medal): The Medal object to remove from the player.
+
+    Raises:
+        PlayerDoesntHaveMedal: Player doesn't have the specified medal.
+    '''
+    if medal.medal_id not in [m.medal_id for m in player.medals]:
+        raise PlayerDoesntHaveMedal
+
+    player.medals.remove(medal)
+
+    db().update_player(player)
+
+
+def add_item(player: Player, item: Item, amount: int = 1) -> None:
+    '''
+    Give an item to the specified player.
+
+    Args:
+        player (Player): The Player object to update.
+        item (Item): The Item object to add to the player's inventory.
+        amount (int, optional): The quantity of the item to add. Defaults to 1.
+    '''
+    player.add_item(item)
+
+
+def remove_item(player: Player, item: Item, amount: int = 1) -> int:
+    '''
+    Remove an item from the specified player.
+
+    Args:
+        player (Player): The Player object to update.
+        item (Item): The Item object to remove from the player's inventory.
+        amount (int, optional): The quantity of the item to remove. Defaults to 1.
+
+    Returns:
+        int: The amount of items removed
+    '''
+    slot = player.get_slot(item.item_id)
+
+    if slot is None:
+        return 0
+
+    amount = min(slot.amount, amount)
+
+    player.remove_item(item, amount)
 
 
 #####################

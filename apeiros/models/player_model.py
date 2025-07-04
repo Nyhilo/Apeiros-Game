@@ -73,10 +73,10 @@ class Player(Base):
 
         self.inventory.append(PlayerItem(_player_id=self.id, _item_id=item.item_id, item=item, amount=1))
 
-    def remove_item(self, item: Item):
+    def remove_item(self, item: Item, amount: int = 1):
         '''Decrement the amount of an existing item and remove it if there are none left'''
         if existing := self.get_slot(item.item_id):
-            existing.amount -= 1
+            existing.amount -= amount
 
             if existing.amount <= 0:
                 self.inventory.remove(existing)

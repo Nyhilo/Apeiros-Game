@@ -17,8 +17,21 @@ class PlayerNicknameTaken(Exception):
     pass
 
 
-# Location Exceptions #
+class PlayerAlreadyHasMedal(Exception):
+    '''
+    Thrown when giving a medal to a player that is already associated with them.
+    '''
+    pass
 
+
+class PlayerDoesntHaveMedal(Exception):
+    '''
+    Thrown when removing a medal from a player that they do not have.
+    '''
+    pass
+
+
+# Location Exceptions #
 class LocationOverlapError(Exception):
     '''
     Thrown when the program attempts to save a location at a coordinate that
